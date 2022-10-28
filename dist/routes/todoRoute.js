@@ -7,17 +7,18 @@ router.get("/", (req, res) => {
     res.json({ todos: todos });
 });
 router.post("/", (req, res) => {
+    const body = req.body;
     const newtodo = {
         id: new Date().toISOString(),
-        text: req.body.text,
+        text: body.text,
     };
     todos.push(newtodo);
     res.status(200).json({ newtodo: newtodo, todos: todos });
 });
 router.post("/delete/:id", (req, res) => {
-    const id = req.params.id;
+    const params = req.params;
     const todoIndex = todos.findIndex((todoItem) => {
-        return todoItem.id === id;
+        return todoItem.id === params.id;
     });
     if (todoIndex >= 0) {
         todos.splice(todoIndex, 1);
@@ -27,12 +28,13 @@ router.post("/delete/:id", (req, res) => {
     res.status(404).json({ msg: "id not found in todo" });
 });
 router.put("/update/:id", (req, res) => {
-    const id = req.params.id;
+    const params = req.params;
+    const body = req.body;
     const todoIndex = todos.findIndex((todoItem) => {
-        return todoItem.id === id;
+        return todoItem.id === params.id;
     });
     if (todoIndex >= 0) {
-        todos[todoIndex] = { id: id, text: req.body.text };
+        todos[todoIndex] = { id: params.id, text: body.text };
         res.status(404).json({ todos });
         return;
     }
